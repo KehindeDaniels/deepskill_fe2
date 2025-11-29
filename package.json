@@ -11,8 +11,11 @@
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.4",
+    "@strapi/client": "^1.6.0",
+    "aos": "^2.3.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.24",
     "lucide-react": "^0.554.0",
     "next": "16.0.4",
     "next-themes": "^0.4.6",
