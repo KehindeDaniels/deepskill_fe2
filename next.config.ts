@@ -15,6 +15,7 @@ const nextConfig = {
         pathname: "/uploads/**",
       },
     ],
+    unoptimized: true,
   },
 };
 

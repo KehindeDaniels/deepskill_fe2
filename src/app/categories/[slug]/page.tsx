@@ -1,33 +1,58 @@
+// app/categories/[slug]/page.tsx
 import { client } from "@/lib/strapi";
 import ModuleCard from "@/components/modules/ModuleCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
+import { getLocaleFromHeaders } from "@/lib/locale";
+import Image from "next/image";
 
 export default async function CategorySlugPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = params;
+  const { slug } = await params;
+  const locale = await getLocaleFromHeaders();
 
   const categoriesApi = client.collection("categories");
 
   const response = await categoriesApi.find({
     filters: {
       slug: {
-        $eq: slug, // ensure exact match
+        $eq: slug,
       },
     },
+    locale: locale,
     populate: {
       thumbnail: { populate: "*" },
-      modules: { populate: ["thumbnail"] },
+      modules: {
+        populate: ["thumbnail"],
+        filters: {
+          locale: {
+            $eq: locale,
+          },
+        },
+      },
     },
   });
 
   const category = response.data?.[0];
 
-  if (!category) return notFound();
+  // Debug logging
+  console.log("Category Page Debug:", {
+    slug,
+    locale,
+    categoryFound: !!category,
+    categoryTitle: category?.title,
+    categorySlug: category?.slug,
+    modulesCount: category?.modules?.length,
+  });
+
+  if (!category) {
+    console.log("Category not found for slug:", slug);
+    return notFound();
+  }
 
   const thumb =
     category.thumbnail?.[0]?.formats?.large?.url ||
@@ -54,13 +79,15 @@ export default async function CategorySlugPage({
       {/* Banner */}
       <section className="relative h-60 w-full overflow-hidden rounded-b-3xl mt-4">
         {heroImage ? (
-          <img
+          <Image
             src={heroImage}
             alt={category.title}
-            className="h-full w-full object-cover brightness-90"
+            fill
+            className="object-cover brightness-90"
+            priority
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-r from-indigo-600 to-blue-500" />
+          <div className="h-full w-full bg-linear-to-r from-indigo-600 to-blue-500" />
         )}
 
         <div className="absolute inset-0 bg-black/40" />
@@ -82,8 +109,8 @@ export default async function CategorySlugPage({
 
         {category.modules?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {category.modules.map((mod: any) => (
-              <ModuleCard key={mod.documentId} module={mod} />
+            {category.modules.map((mod) => (
+              <ModuleCard key={mod.documentId || mod.id} module={mod} />
             ))}
           </div>
         ) : (

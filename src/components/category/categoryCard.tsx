@@ -1,19 +1,20 @@
+// components/category/CategoryCard.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import AOS from "aos";
 import { useEffect } from "react";
-// import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
+import { StrapiImage, StrapiModule } from "@/types/strapi";
 
 type Props = {
   title: string;
   slug: string;
   caption?: string;
-  thumbnail: any;
-  modules?: any[];
+  thumbnail: StrapiImage[] | null;
+  modules?: StrapiModule[];
 };
 
 export default function CategoryCard({
@@ -23,18 +24,16 @@ export default function CategoryCard({
   thumbnail,
   modules = [],
 }: Props) {
-  // Initialize AOS animation
   useEffect(() => {
     AOS.init({ duration: 600, easing: "ease-out-cubic", once: true });
   }, []);
 
-  // Extract the first image
-  const img = Array.isArray(thumbnail) ? thumbnail[0] : thumbnail;
-  const formats = img?.formats || {};
+  // Safely get the first image
+  const img = thumbnail && thumbnail.length > 0 ? thumbnail[0] : null;
 
   const imageUrl =
-    formats?.medium?.url ||
-    formats?.small?.url ||
+    img?.formats?.medium?.url ||
+    img?.formats?.small?.url ||
     img?.url ||
     "/placeholder.jpg";
 
