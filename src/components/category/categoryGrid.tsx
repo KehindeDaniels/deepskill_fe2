@@ -1,3 +1,4 @@
+// components/category/CategoryGrid.tsx
 import { Category } from "@/types/category";
 import CategoryCard from "./categoryCard";
 // import CategoryCard from "./CategoryCard";
@@ -15,7 +16,7 @@ export default function CategoryGrid({ categories }: Props) {
     >
       {categories.map((cat) => (
         <CategoryCard
-          key={cat.documentId}
+          key={cat.id || cat.documentId}
           title={cat.title}
           slug={cat.slug}
           caption={cat.caption}
