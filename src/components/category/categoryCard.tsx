@@ -1,4 +1,3 @@
-// components/category/CategoryCard.tsx
 "use client";
 
 import Image from "next/image";
@@ -28,7 +27,6 @@ export default function CategoryCard({
     AOS.init({ duration: 600, easing: "ease-out-cubic", once: true });
   }, []);
 
-  // Safely get the first image
   const img = thumbnail && thumbnail.length > 0 ? thumbnail[0] : null;
 
   const imageUrl =
@@ -44,35 +42,62 @@ export default function CategoryCard({
   const altText = img?.alternativeText || img?.caption || title;
 
   return (
-    <Link href={`/categories/${slug}`} data-aos="fade-up">
-      <Card className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-xl dark:bg-gray-900 dark:border-gray-700">
+    <Link
+      href={`/categories/${slug}`}
+      data-aos="fade-up"
+      data-testid="category-card"
+      data-category-slug={slug}
+    >
+      <Card
+        className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-xl dark:bg-gray-900 dark:border-gray-700"
+        data-testid={`category-card-${slug}`}
+      >
         {/* Image */}
-        <div className="relative h-48 w-full overflow-hidden">
+        <div
+          className="relative h-48 w-full overflow-hidden"
+          data-testid="category-image-container"
+        >
           <Image
             src={fullImageUrl}
             alt={altText}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             unoptimized
+            data-testid="category-image"
           />
         </div>
 
         {/* Content */}
         <CardContent className="p-5">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+          <h3
+            className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 transition-colors"
+            data-testid="category-title"
+          >
             {title}
           </h3>
 
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+          <p
+            className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+            data-testid="category-caption"
+          >
             {caption || "Discover high-impact learning modules."}
           </p>
 
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+          <div
+            className="mt-4 flex items-center justify-between"
+            data-testid="category-footer"
+          >
+            <span
+              className="text-xs font-medium text-gray-500 dark:text-gray-400"
+              data-testid="modules-count"
+            >
               {modules.length} {modules.length === 1 ? "module" : "modules"}
             </span>
 
-            <ArrowRight className="h-4 w-4 text-indigo-600 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              className="h-4 w-4 text-indigo-600 group-hover:translate-x-1 transition-transform"
+              data-testid="category-arrow"
+            />
           </div>
         </CardContent>
       </Card>
